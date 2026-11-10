@@ -1,8 +1,26 @@
-# Application: Pharmacy Management System
-# Problem: Managing medicine inventory and sales, and taxes.
-# Output: Total profits and losses, and tax owed on profit.
-# Users: Pharmacist.
-# Features: Add a medicine name, stock, price per unit and price of total sales of a certain units to get totals and tax owed on profit.
+# Application: Best Pharmacy Management System
+# Problem: A pharmacist who tracks medicine inventory, sales and profit by hand
+#          can easily lose count of stock, profits, loss and calculation of taxes.
+#          This can lead to miscalculation of inventories, over - ordering and incorrect
+#          taxes.
+#Expected input:
+#         Medicine name (text)
+#         Buying price per unit (number)
+#         Selling price per unit (number)
+#         Stock quantity (whole number)
+#         Units sold (whole number)
+#         Menu choice (number)
+# Expected output:
+#         Confirmation messages when a medicine is added or a sale recorded
+#         Remaining stock for each medicine
+#         Total amount earned from sales
+#         Total profit or loss
+#         Tax owed on profit
+#         A summary report of all medicines
+# Users: Pharmacist / Pharmacy owner.
+# Features: Add a medicine, record a sale, view all medicines in stock, 
+#           search for a medicine by name, calculate total earnings, total profit/loss and tax owed on profit, 
+#           and generate a simple summary report of the pharmacy's performance
 
 #stage 1
 

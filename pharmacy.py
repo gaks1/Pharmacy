@@ -25,57 +25,103 @@
 #stage 1
 
 print("<----- Stage 4: Best Pharmacy Management ----->")
-medicine_name = input("Please enter the name of the medicine: ")
-price_bought_per_unit = int(input("Please enter the price bought per unit e.g.30: "))
-stock = int(input("Please enter the total stock bought e.g.30: "))
-price_per_unit = int(input("Please enter the price per unit sold at e.g.30: "))
-total_sold = int(input("Please enter total amount of the medicine sold e.g.30: "))
 
-remaining = stock - total_sold
-total_earned = total_sold * price_per_unit
-total_revenue = total_sold * price_bought_per_unit
-total_profit = total_earned - total_revenue
+running = True
+last_name = ""
+last_total_bought= 0
+last_bought_price = 0
+last_profit = 0
+last_tax = 0
+last_loss = 0
+last_total_sold = 0
+last_sell_price = 0
 
-#check quantity. 
-if total_sold > stock:
-    print(f"Error cannot have sold {total_sold} more than available stock {stock}")
-elif total_sold == 0:
-    print("No revenue earned, as no stock was sold.")    
-else:
-    print(f"Medicine bought {medicine_name}")
-    print(f"Total amount of {medicine_name} bought to stock {stock}")
-    print(f"Total amount of {medicine_name} sold {total_sold}")
-    print(f"Stock of {medicine_name} remaining {remaining}")
-    print()  
+while running:
+    print()
+    print("---- MENU ----")
+    print("1. Add medicine and calculate")
+    print("2. View last result")
+    print("3. Exit")
+    choice = int(input("Please choose an option (1 - 3): "))
 
-    if total_profit > 0:
-        print(f"Total amount earned from sale {total_earned}")
-        print(f"Total profit earned {total_profit}")
-    elif total_profit < 0:
-        print(f"Total amount earned from sale {total_earned}")
-        print(f"Total loss incurred {abs(total_profit)}")
+    if choice == 1:
+        medicine_name = input("Please enter the name of the medicine: ")
+        price_bought_per_unit = int(input("Please enter the price bought per unit e.g.30: "))
+        stock = int(input("Please enter the total stock bought e.g.30: "))
+        price_per_unit = int(input("Please enter the price per unit sold at e.g.30: "))
+        total_sold = int(input("Please enter total amount of the medicine sold e.g.30: "))
+        
+        remaining = stock - total_sold
+        total_earned = total_sold * price_per_unit
+        total_revenue = total_sold * price_bought_per_unit
+        total_profit = total_earned - total_revenue
+        
+        #check quantity. 
+        if total_sold > stock:
+            print(f"Error cannot have sold {total_sold} more than available stock {stock}")
+        elif total_sold == 0:
+            print("No revenue earned, as no stock was sold.")    
+        else:
+            print(f"Medicine bought {medicine_name}")
+            print(f"Total amount of {medicine_name} bought to stock {stock}")
+            print(f"Total amount of {medicine_name} sold {total_sold}")
+            print(f"Stock of {medicine_name} remaining {remaining}")
+            print()  
+        
+            if total_profit > 0:
+                print(f"Total amount earned from sale {total_earned}")
+                print(f"Total profit earned {total_profit}")
+            elif total_profit < 0:
+                print(f"Total amount earned from sale {total_earned}")
+                print(f"Total loss incurred {abs(total_profit)}")
+            else:
+                print(" You broke even with no profit or loss ")
+            print()    
+        
+        
+        
+        tax_owed = 0
+        
+        if total_profit > 0 and total_profit <= 250:
+            taxable_income = total_profit - 0
+            tax1 = taxable_income * 0.1
+            tax_owed+=tax1
+        elif total_profit > 250 and total_profit <= 500:
+            taxable_income = total_profit - 250
+            tax2 = taxable_income * 0.2
+            tax_owed+=tax2
+        elif total_profit > 500:
+            taxable_income = total_profit - 500
+            tax3 = taxable_income * 0.3
+            tax_owed+=tax3
+        
+        if total_profit > 0:    
+            print(f"Tax owed on profit of {total_profit} is {tax_owed}")
+            last_profit = total_profit
+        else:
+            print("You have o tax obligation, as there is no profit")
+            last_loss = total_profit
+
+        last_name = medicine_name
+        last_bought_price = price_bought_per_unit 
+        last_total_bought= stock
+        last_tax = tax_owed
+        last_total_sold = total_sold
+        last_sell_price = price_per_unit
+    elif choice == 2:
+        print(f"Last medicine: {last_name}")
+        print(f"Last bought price: {last_bought_price}")
+        print(f"Last total bought: {last_total_bought}")
+        print(f"Last tax owed: {last_tax}")
+        print(f"Last total sold: {last_total_sold}")
+        print(f"Last sell price: {last_sell_price}")
+        if last_profit > 0:
+            print(f"Last profit: {last_profit}")
+        elif last_loss < 0:
+            print(f"Last loss: {abs(last_loss)}")
+    elif choice == 3:
+        running = False
     else:
-        print(" You broke even with no profit or loss ")
-    print()    
+        print("Invalid choice. Please choose a valid option (1 - 3).")
 
-
-
-tax_owed = 0
-
-if total_profit > 0 and total_profit <= 250:
-    taxable_income = total_profit - 0
-    tax1 = taxable_income * 0.1
-    tax_owed+=tax1
-elif total_profit > 250 and total_profit <= 500:
-    taxable_income = total_profit - 250
-    tax2 = taxable_income * 0.2
-    tax_owed+=tax2
-elif total_profit > 500:
-    taxable_income = total_profit - 500
-    tax3 = taxable_income * 0.3
-    tax_owed+=tax3
-
-if total_profit > 0:    
-    print(f"Tax owed on profit of {total_profit} is {tax_owed}")
-else:
-    print("You have o tax obligation, as there is no profit")
+print("Thank you for using the Best Pharmacy Management System. Goodbye!")

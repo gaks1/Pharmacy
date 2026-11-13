@@ -22,16 +22,16 @@
 #           search for a medicine by name, calculate total earnings, total profit/loss and tax owed on profit, 
 #           and generate a simple summary report of the pharmacy's performance
 
-#stage 5 - Functions
-
+#stage 6 - Data structures 
 
 
 def display_menu():
     print()
     print("---- MENU ----")
     print("1. Add medicine and calculate")
-    print("2. View last result")
-    print("3. Exit")
+    print("2. View all medicines")
+    print("3. Search for a medicine")
+    print("4. Exit")
 
 
 def calculate_tax(profit):
@@ -49,6 +49,7 @@ def calculate_tax(profit):
         taxable_income = profit - 500
         tax_owed += taxable_income * 0.3
     return tax_owed
+
 
 
 def add_medicine():
@@ -106,50 +107,83 @@ def add_medicine():
         "tax": tax_owed
     }
 
-def view_last_result(result):
-    if result is None:
-        print("No medicine has been added yet.")
+
+
+def view_all_medicines(medicines):
+    if len(medicines) == 0:
+        print("No medicines have been added yet.")
         return
 
-    print(f"Last medicine: {result['name']}")
-    print(f"Last bought price: {result['bought_price']}")
-    print(f"Last total bought: {result['stock']}")
-    print(f"Last total sold: {result['sold']}")
-    print(f"Last sell price: {result['sell_price']}")
-    print(f"Last stock remaining: {result['remaining']}")
-    print(f"Last amount earned: {result['earned']}")
+    print()
+    print(f"===== ALL MEDICINES ({len(medicines)}) =====")
+    for medicine in medicines:
+        print(f"Name: {medicine['name']}")
+        print(f"  Bought price: {medicine['bought_price']}")
+        print(f"  Sell price: {medicine['sell_price']}")
+        print(f"  Stock bought: {medicine['stock']}")
+        print(f"  Sold: {medicine['sold']}")
+        print(f"  Remaining: {medicine['remaining']}")
+        print(f"  Earned: {medicine['earned']}")
 
-    if result["profit"] > 0:
-        print(f"Last profit: {result['profit']}")
-    elif result["profit"] < 0:
-        print(f"Last loss: {abs(result['profit'])}")
-    else:
-        print("Last result: break-even")
+        if medicine["profit"] > 0:
+            print(f"  Profit: {medicine['profit']}")
+        elif medicine["profit"] < 0:
+            print(f"  Loss: {abs(medicine['profit'])}")
+        else:
+            print("  Break-even")
 
-    print(f"Last tax owed: {result['tax']}")
+        print(f"  Tax owed: {medicine['tax']}")
+        print("  ------------------------")
+
+def search_medicine(medicines):
+    if len(medicines) == 0:
+        print("No medicines have been added yet.")
+        return
+
+    search_name = input("Enter the name of the medicine to search: ")
+    found = False
+
+    for medicine in medicines:
+        if medicine["name"].lower() == search_name.lower():
+            found = True
+            print()
+            print(f"Found: {medicine['name']}")
+            print(f"  Bought price: {medicine['bought_price']}")
+            print(f"  Sell price: {medicine['sell_price']}")
+            print(f"  Stock bought: {medicine['stock']}")
+            print(f"  Sold: {medicine['sold']}")
+            print(f"  Remaining: {medicine['remaining']}")
+            print(f"  Earned: {medicine['earned']}")
+            print(f"  Profit/Loss: {medicine['profit']}")
+            print(f"  Tax owed: {medicine['tax']}")
+
+    if found == False:
+        print(f"No medicine found with the name '{search_name}'.")
+
 
 
 # main program
-print("<----- Stage 5: Best Pharmacy Management ----->")
+print("<----- Stage 6: Best Pharmacy Management ----->")
 
-last_result = None
+medicines = []
 running = True
 
 while running:
     display_menu()
-    choice = input("Please choose an option (1 - 3): ")
+    choice = input("Please choose an option (1 - 4): ")
 
     if choice == "1":
         result = add_medicine()
         if result is not None:
-            last_result = result
+            medicines.append(result)
     elif choice == "2":
-        view_last_result(last_result)
+        view_all_medicines(medicines)
     elif choice == "3":
+        search_medicine(medicines)
+    elif choice == "4":
         running = False
     else:
-        print("Invalid choice. Please choose a valid option (1 - 3).")
+        print("Invalid choice. Please choose a valid option (1 - 4).")
 
 print("Thank you for using the Best Pharmacy Management System. Goodbye!")
-
 

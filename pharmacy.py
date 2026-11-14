@@ -22,8 +22,12 @@
 #           search for a medicine by name, calculate total earnings, total profit/loss and tax owed on profit, 
 #           and generate a simple summary report of the pharmacy's performance
 
-#stage 6 - Data structures 
+#stage 7 - File Handling
 
+import os
+
+
+DATA_FILE = "medicine.txt"
 
 def display_menu():
     print()
@@ -50,6 +54,58 @@ def calculate_tax(profit):
         tax_owed += taxable_income * 0.3
     return tax_owed
 
+
+def load_medicines():
+    medicines = []
+
+    with open(DATA_FILE, "r", encoding="utf-8") as f:
+        try:
+            lines = f.readlines()
+        except FileNotFoundError:
+            print("No saved data exists. Add medicine first. ")
+            return medicines
+
+        #skip the header
+        for line in lines[1:]:
+            line = line.strip()
+            if line == "":
+                continue
+
+            parts = line.split("|")
+
+            medicine = {
+            "name": parts[0],
+            "bought_price": int(parts[1]),
+            "stock": int(parts[2]),
+            "sell_price": int(parts[3]),
+            "sold": int(parts[4]),
+            "remaining": int(parts[5]),
+            "earned": int(parts[6]),
+            "profit": int(parts[7]),
+            "tax": float(parts[8])
+            }
+
+            medicines.append(medicine)
+    return medicines        
+
+def save_medicine(medicines):
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        f.write("name|bought_price|stock|sell_price|sold|remaining|earned|profit|tax\n")
+        for medicine in medicines:
+            line = "|".join([
+            medicine["name"],
+            str(medicine["bought_price"]),
+            str(medicine["stock"]),
+            str(medicine["sell_price"]),
+            str(medicine["sold"]),
+            str(medicine["remaining"]),
+            str(medicine["earned"]),
+            str(medicine["profit"]),
+            str(medicine["tax"])
+            ])
+            f.write(line + "\n")
+
+             
 
 
 def add_medicine():
@@ -163,9 +219,15 @@ def search_medicine(medicines):
 
 
 # main program
-print("<----- Stage 6: Best Pharmacy Management ----->")
+print("<----- Stage 7: Best Pharmacy Management ----->")
 
 medicines = []
+if os.path.exists(DATA_FILE):
+    medicines = load_medicines()
+    if len(medicines) == 0:
+        print("No saved medications available. The pharmacy has just started. ")
+    else:
+        print(f"Loaded {len(medicines)} medicine(s) from {DATA_FILE}")
 running = True
 
 while running:
@@ -176,6 +238,8 @@ while running:
         result = add_medicine()
         if result is not None:
             medicines.append(result)
+            save_medicine(medicines)
+            print("Medicines saved to file")
     elif choice == "2":
         view_all_medicines(medicines)
     elif choice == "3":

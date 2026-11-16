@@ -74,15 +74,15 @@ def load_medicines():
             parts = line.split("|")
 
             medicine = {
-            "name": parts[0],
-            "bought_price": int(parts[1]),
-            "stock": int(parts[2]),
-            "sell_price": int(parts[3]),
-            "sold": int(parts[4]),
-            "remaining": int(parts[5]),
-            "earned": int(parts[6]),
-            "profit": int(parts[7]),
-            "tax": float(parts[8])
+            "name": parts[0].strip(),
+            "bought_price": int(parts[1].strip()),
+            "stock": int(parts[2].strip()),
+            "sell_price": int(parts[3].strip()),
+            "sold": int(parts[4].strip()),
+            "remaining": int(parts[5].strip()),
+            "earned": int(parts[6].strip()),
+            "profit": int(parts[7].strip()),
+            "tax": float(parts[8].strip())
             }
 
             medicines.append(medicine)
@@ -90,19 +90,9 @@ def load_medicines():
 
 def save_medicine(medicines):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
-        f.write("name|bought_price|stock|sell_price|sold|remaining|earned|profit|tax\n")
+        f.write(f"{'Name':<20}|{'Bought Price':>15}|{'Stock':>10}|{'Sell Price':>15}|{'Sold':>10}|{'Remaining':>10}|{'Earned':>10}|{'Profit':>10}|{'Tax':>10}\n")
         for medicine in medicines:
-            line = "|".join([
-            medicine["name"],
-            str(medicine["bought_price"]),
-            str(medicine["stock"]),
-            str(medicine["sell_price"]),
-            str(medicine["sold"]),
-            str(medicine["remaining"]),
-            str(medicine["earned"]),
-            str(medicine["profit"]),
-            str(medicine["tax"])
-            ])
+            line = f"{medicine['name']:<20}|{medicine['bought_price']:>15}|{medicine['stock']:>10}|{medicine['sell_price']:>15}|{medicine['sold']:>10}|{medicine['remaining']:>10}|{medicine['earned']:>10}|{medicine['profit']:>10}|{medicine['tax']:>10.2f}"
             f.write(line + "\n")
 
              

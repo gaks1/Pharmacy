@@ -27,6 +27,42 @@
 import os
 
 
+def get_text_input(prompt):
+    """
+    Get the text from the user and check if it's an empty text.
+    """
+    while True:
+        user_input = input(prompt).strip()
+        if user_input == "":
+            print("Input cannot be empty. Please enter a valid text.")
+        else:
+            return user_input
+
+
+def get_number_input(prompt):
+    """
+    Get the number from the user and check if it's a valid number.
+    """
+    while True:
+        user_input = input(prompt).strip()
+        try:
+            number = int(user_input)
+            return number
+        except ValueError:
+            print("Invalid input. Please enter a valid number.")
+
+
+def validate_menu_choice():
+    """
+    Validate the menu choice input by the user.
+    """
+    VALID_MENU_OPTIONS = ["1", "2", "3", "4"]
+    while True:
+            choice = input("Please choose an option (1 - 4): ").strip()
+            if choice in VALID_MENU_OPTIONS:
+                return choice
+            print("Error: invalid choice. Please enter a number from 1 to 4.")
+
 DATA_FILE = "medicine.txt"
 
 def display_menu():
@@ -99,11 +135,11 @@ def save_medicine(medicines):
 
 
 def add_medicine():
-    medicine_name = input("Please enter the name of the medicine: ")
-    price_bought_per_unit = int(input("Please enter the price bought per unit e.g.30: "))
-    stock = int(input("Please enter the total stock bought e.g.30: "))
-    price_per_unit = int(input("Please enter the price per unit sold at e.g.30: "))
-    total_sold = int(input("Please enter total amount of the medicine sold e.g.30: "))
+    medicine_name = get_text_input("Please enter the name of the medicine: ")
+    price_bought_per_unit = get_number_input("Please enter the price bought per unit e.g.30: ")
+    stock = get_number_input("Please enter the total stock bought e.g.30: ")
+    price_per_unit = get_number_input("Please enter the price per unit sold at e.g.30: ")
+    total_sold = get_number_input("Please enter total amount of the medicine sold e.g.30: ")
 
     remaining = stock - total_sold
     total_earned = total_sold * price_per_unit
@@ -186,7 +222,7 @@ def search_medicine(medicines):
         print("No medicines have been added yet.")
         return
 
-    search_name = input("Enter the name of the medicine to search: ")
+    search_name = get_text_input("Enter the name of the medicine to search: ")
     found = False
 
     for medicine in medicines:
@@ -209,15 +245,18 @@ def search_medicine(medicines):
 
 
 # main program
-print("<----- Stage 7: Best Pharmacy Management ----->")
+print("<----- Stage 8: Best Pharmacy Management ----->")
 
-medicines = []
+
 if os.path.exists(DATA_FILE):
     medicines = load_medicines()
     if len(medicines) == 0:
         print("No saved medications available. The pharmacy has just started. ")
     else:
         print(f"Loaded {len(medicines)} medicine(s) from {DATA_FILE}")
+else:
+    print(f"No saved data exists. Add medicine first. ")
+    medicines = []
 running = True
 
 while running:

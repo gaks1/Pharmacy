@@ -22,7 +22,7 @@
 #           search for a medicine by name, calculate total earnings, total profit/loss and tax owed on profit, 
 #           and generate a simple summary report of the pharmacy's performance
 
-#stage 7 - File Handling
+#Stage 8 - Error Handling
 
 import os
 
@@ -39,7 +39,7 @@ def get_text_input(prompt):
             return user_input
 
 
-def get_number_input(prompt):
+def get_number_input(prompt, min_value=None, max_value=None):
     """
     Get the number from the user and check if it's a valid number.
     """
@@ -47,10 +47,18 @@ def get_number_input(prompt):
         user_input = input(prompt).strip()
         try:
             number = int(user_input)
-            return number
         except ValueError:
             print("Invalid input. Please enter a valid number.")
+            continue
 
+        if min_value is not None and number < min_value:
+            print(f"Invalid input. Value cannot be less than {min_value}.")
+            continue
+        if max_value is not None and number > max_value:
+            print(f"Invalid input. Value cannot be more than {max_value}.")
+            continue
+
+        return number
 
 def validate_menu_choice():
     """
@@ -94,52 +102,62 @@ def calculate_tax(profit):
 def load_medicines():
     medicines = []
 
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        try:
+    try:
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
             lines = f.readlines()
-        except FileNotFoundError:
-            print("No saved data exists. Add medicine first. ")
-            return medicines
+    except FileNotFoundError:
+        print("No saved data exists. Add medicine first.")
+        return medicines
+    except OSError as error:
+        print(f"Error: could not read {DATA_FILE} ({error})")
+        return medicines
 
-        #skip the header
-        for line in lines[1:]:
-            line = line.strip()
-            if line == "":
-                continue
+    #skip the header
+    for line_number, line in enumerate(lines[1:], start=2):
+        line = line.strip()
+        if line == "":
+            continue
 
-            parts = line.split("|")
+        parts = line.split("|")
 
+        try:
             medicine = {
-            "name": parts[0].strip(),
-            "bought_price": int(parts[1].strip()),
-            "stock": int(parts[2].strip()),
-            "sell_price": int(parts[3].strip()),
-            "sold": int(parts[4].strip()),
-            "remaining": int(parts[5].strip()),
-            "earned": int(parts[6].strip()),
-            "profit": int(parts[7].strip()),
-            "tax": float(parts[8].strip())
+                "name": parts[0].strip(),
+                "bought_price": int(parts[1].strip()),
+                "stock": int(parts[2].strip()),
+                "sell_price": int(parts[3].strip()),
+                "sold": int(parts[4].strip()),
+                "remaining": int(parts[5].strip()),
+                "earned": int(parts[6].strip()),
+                "profit": int(parts[7].strip()),
+                "tax": float(parts[8].strip())
             }
+        except (ValueError, IndexError):
+            print(f"Warning: line {line_number} in {DATA_FILE} is damaged and was skipped.")
+            continue
 
-            medicines.append(medicine)
-    return medicines        
+        medicines.append(medicine)
+
+    return medicines
 
 def save_medicine(medicines):
-    with open(DATA_FILE, "w", encoding="utf-8") as f:
-        f.write(f"{'Name':<20}|{'Bought Price':>15}|{'Stock':>10}|{'Sell Price':>15}|{'Sold':>10}|{'Remaining':>10}|{'Earned':>10}|{'Profit':>10}|{'Tax':>10}\n")
-        for medicine in medicines:
-            line = f"{medicine['name']:<20}|{medicine['bought_price']:>15}|{medicine['stock']:>10}|{medicine['sell_price']:>15}|{medicine['sold']:>10}|{medicine['remaining']:>10}|{medicine['earned']:>10}|{medicine['profit']:>10}|{medicine['tax']:>10.2f}"
-            f.write(line + "\n")
-
+    try:
+        with open(DATA_FILE, "w", encoding="utf-8") as f:
+            f.write(f"{'Name':<20}|{'Bought Price':>15}|{'Stock':>10}|{'Sell Price':>15}|{'Sold':>10}|{'Remaining':>10}|{'Earned':>10}|{'Profit':>10}|{'Tax':>10}\n")
+            for medicine in medicines:
+                line = f"{medicine['name']:<20}|{medicine['bought_price']:>15}|{medicine['stock']:>10}|{medicine['sell_price']:>15}|{medicine['sold']:>10}|{medicine['remaining']:>10}|{medicine['earned']:>10}|{medicine['profit']:>10}|{medicine['tax']:>10.2f}"
+                f.write(line + "\n")
+    except OSError as error:
+        print(f"Error: could not write to {DATA_FILE} ({error})")
              
 
 
 def add_medicine():
     medicine_name = get_text_input("Please enter the name of the medicine: ")
-    price_bought_per_unit = get_number_input("Please enter the price bought per unit e.g.30: ")
-    stock = get_number_input("Please enter the total stock bought e.g.30: ")
-    price_per_unit = get_number_input("Please enter the price per unit sold at e.g.30: ")
-    total_sold = get_number_input("Please enter total amount of the medicine sold e.g.30: ")
+    price_bought_per_unit = get_number_input("Please enter the price bought per unit e.g.30: ", min_value=1)
+    stock = get_number_input("Please enter the total stock bought e.g.30: ", min_value=1)
+    price_per_unit = get_number_input("Please enter the price per unit sold at e.g.30: ", min_value=1)
+    total_sold = get_number_input("Please enter total amount of the medicine sold e.g.30: ", min_value=0, max_value=stock)
 
     remaining = stock - total_sold
     total_earned = total_sold * price_per_unit

@@ -1,5 +1,2 @@
-Name                |   Bought Price|     Stock|     Sell Price|      Sold| Remaining|    Earned|    Profit|       Tax
-loj                 |            300|        20|            350|        15|         5|      5250|       750|     75.00
-gdff                |            200|        20|            300|        10|        10|      3000|      1000|    150.00
-locd                |            300|        20|            350|         1|        19|       350|        50|      5.00
-mona                |            300|        10|            500|         2|         8|      1000|       400|     30.00
+Name                |   Bought Price|     Stock|     Sell Price|      Sold| Remaining|    Earned|      cost|    Profit|       Tax
+malon               |            200|        20|            300|        10|        10|      3000|      2000|      1000|    150.00

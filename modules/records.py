@@ -1,5 +1,4 @@
 # Creating loading and sving medicines in a txt file
-import os
 
 from modules.calculations import calculate_results
 from modules.validations import get_number_input, get_text_input
@@ -40,8 +39,9 @@ def load_medicines():
                 "sold": int(parts[4].strip()),
                 "remaining": int(parts[5].strip()),
                 "earned": int(parts[6].strip()),
-                "profit": int(parts[7].strip()),
-                "tax": float(parts[8].strip())
+                "cost": int(parts[7].strip()),
+                "profit": int(parts[8].strip()),
+                "tax": float(parts[9].strip())
             }
         except (ValueError, IndexError):
             print(f"Warning: line {line_number} is damaged and was skipped.")
@@ -55,7 +55,7 @@ def load_medicines():
 def save_medicine(medicines):
     try:
         with open(DATA_FILE, "w", encoding="utf-8") as f:
-            f.write(f"{'Name':<20}|{'Bought Price':>15}|{'Stock':>10}|{'Sell Price':>15}|{'Sold':>10}|{'Remaining':>10}|{'Earned':>10}|{'cost':>10}|{'Profit':>10}|{'Tax':>10}\n")
+            f.write(f"{'Name':<20}|{'Bought Price':>15}|{'Stock':>10}|{'Sell Price':>15}|{'Sold':>10}|{'Remaining':>10}|{'Earned':>10}|{'Cost':>10}|{'Profit':>10}|{'Tax':>10}\n")
             for medicine in medicines:
                 line = f"{medicine['name']:<20}|{medicine['bought_price']:>15}|{medicine['stock']:>10}|{medicine['sell_price']:>15}|{medicine['sold']:>10}|{medicine['remaining']:>10}|{medicine['earned']:>10}|{medicine['cost']:>10}|{medicine['profit']:>10}|{medicine['tax']:>10.2f}"
                 f.write(line + "\n")

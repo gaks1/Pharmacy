@@ -26,3 +26,6 @@ Python 3.10 or newer. Standard library only.
 ## Data storage
 Records are stored in data/medicine.txt, one medicine per line,
 fields separated by "|".
+
+## Github Link For Project Progress Tracking
+[Github](https://github.com/gaks1/Pharmacy)
